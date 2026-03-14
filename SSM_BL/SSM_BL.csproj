@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SSM_DL\SSM_DL.csproj" />
+    <ProjectReference Include="..\SSM_MODEL\SSM_MODEL.csproj" />
+  </ItemGroup>
+
+</Project>
