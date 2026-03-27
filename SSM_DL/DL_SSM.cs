@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using SSM_DL;
+using SSM_MODEL;
 
 namespace SSM_DL
 {
@@ -21,10 +21,8 @@ namespace SSM_DL
             return true;
         }
 
-        public List<MODEL_SSM> GetSubjects()
-        {
-            return subjects;
-        }
+        public List<MODEL_SSM> GetSubjects() => subjects;
+
         public void ShowSubjects()
         {
             if (subjects.Count == 0)
@@ -34,20 +32,26 @@ namespace SSM_DL
             }
 
             for (int i = 0; i < subjects.Count; i++)
-            {
                 Console.WriteLine($"{i + 1}. {subjects[i]}");
-            }
         }
 
         public bool Remove(int subjectIndex)
         {
             if (subjectIndex < 0 || subjectIndex >= subjects.Count)
-            {
                 return false;
-            }
 
             subjects.RemoveAt(subjectIndex);
             return true;
+        }
+
+        public void SaveToJson(string filePath)
+        {
+            JsonHandler.Save(filePath, subjects);
+        }
+
+        public void LoadFromJson(string filePath)
+        {
+            subjects = JsonHandler.Load(filePath);
         }
     }
 }
