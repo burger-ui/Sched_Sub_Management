@@ -16,17 +16,24 @@ namespace SSM_UI
                 Menu();
                 string choice = Console.ReadLine();
 
-                if (choice == "1") Add();
-                else if (choice == "2") Show();
-                else if (choice == "3") Remove();
-                else if (choice == "4") added.SaveDataToJson("subjects.json");
-                else if (choice == "5") added.LoadDataFromJson("subjects.json");
-                else if (choice == "6")
+                switch (choice)
                 {
-                    running = false;
-                    Console.WriteLine("Exiting the program. Goodbye!");
+                    case "1": Add(); break;
+                    case "2": Show(); break;
+                    case "3": Remove(); break;
+                    case "4": added.SaveDataToJson("subjects.json"); break;
+                    case "5": added.LoadDataFromJson("subjects.json"); break;
+                    case "6": AddDb(); break;
+                    case "7": ShowDb(); break;
+                    case "8": RemoveDb(); break;
+                    case "9":
+                        running = false;
+                        Console.WriteLine("Exiting the program. Goodbye!");
+                        break;
+                    default:
+                        Console.WriteLine("Invalid choice. Please try again.");
+                        break;
                 }
-                else Console.WriteLine("Invalid choice. Please try again.");
             }
         }
 
@@ -38,7 +45,10 @@ namespace SSM_UI
             Console.WriteLine("3. Remove Subject");
             Console.WriteLine("4. Save to JSON");
             Console.WriteLine("5. Load from JSON");
-            Console.WriteLine("6. Exit");
+            Console.WriteLine("6. Add Subject to DB");
+            Console.WriteLine("7. Show Subjects from DB");
+            Console.WriteLine("8. Remove Subject from DB");
+            Console.WriteLine("9. Exit");
             Console.Write("Enter your choice: ");
         }
 
@@ -63,9 +73,31 @@ namespace SSM_UI
             added.ShowSubjects();
             Console.Write("Subject number: ");
             if (int.TryParse(Console.ReadLine(), out int subjectIndex))
-                added.RemoveSubject(subjectIndex - 1); // adjust for 1-based display
+                added.RemoveSubject(subjectIndex - 1);
             else
                 Console.WriteLine("Invalid input. Please enter a number.");
+        }
+
+        static void AddDb()
+        {
+            Console.Write("Enter Subject Name: ");
+            string subjectName = Console.ReadLine();
+            Console.Write("Enter Schedule: ");
+            string schedule = Console.ReadLine();
+            added.AddSubjectToDb(subjectName, schedule);
+        }
+
+        static void ShowDb()
+        {
+            Console.WriteLine("\nSubjects from Database:");
+            added.ShowSubjectsFromDb();
+        }
+
+        static void RemoveDb()
+        {
+            Console.Write("Enter Subject Name to remove: ");
+            string subjectName = Console.ReadLine();
+            added.RemoveSubjectFromDb(subjectName);
         }
     }
 }

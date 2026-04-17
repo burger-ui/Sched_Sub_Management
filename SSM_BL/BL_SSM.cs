@@ -1,11 +1,13 @@
-﻿using System;
-using SSM_DL;
+﻿using SSM_DL;
+using SSM_MODEL;
+using System;
 
 namespace SSM_BL
 {
     public class AddSubBL
     {
-        private DL_SSM addSubject = new DL_SSM();
+        private DL_SSM addSubject = new DL_SSM(); 
+        private SubSchedDBData dbHandler = new SubSchedDBData(); 
 
         public void AddSubject(string subjectName, string schedule)
         {
@@ -33,16 +35,23 @@ namespace SSM_BL
             Console.WriteLine("Subjects loaded from JSON file.");
         }
 
-        public void SaveDataToSql(string connectionString)
+        public void AddSubjectToDb(string subjectName, string schedule)
         {
-            addSubject.SaveToSql(connectionString);
-            Console.WriteLine("Subjects saved to SQL database.");
+            dbHandler.Add(new MODEL_SSM(subjectName, schedule));
+            Console.WriteLine("Subject added to DB.");
         }
 
-        public void LoadDataFromSql(string connectionString)
+        public void ShowSubjectsFromDb()
         {
-            addSubject.LoadFromSql(connectionString);
-            Console.WriteLine("Subjects loaded from SQL database.");
+            var subjects = dbHandler.GetAll();
+            if (subjects.Count == 0) Console.WriteLine("No subjects in DB.");
+            else foreach (var s in subjects) Console.WriteLine(s);
+        }
+
+        public void RemoveSubjectFromDb(string subjectName)
+        {
+            bool removed = dbHandler.Remove(subjectName);
+            Console.WriteLine(removed ? "Subject removed from DB." : "Failed to remove subject from DB.");
         }
     }
 }
