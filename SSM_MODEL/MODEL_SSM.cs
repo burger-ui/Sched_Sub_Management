@@ -13,7 +13,6 @@
             Schedule = schedule;
         }
 
-
         public override string ToString()
         {
             return $"{SubjectName} - {Schedule}";

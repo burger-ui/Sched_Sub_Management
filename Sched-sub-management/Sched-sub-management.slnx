@@ -1,6 +1,1 @@
-<Solution>
-  <Project Path="../SSM_BL/SSM_BL.csproj" />
-  <Project Path="../SSM_DL/SSM_DL.csproj" />
-  <Project Path="../SSM_MODEL/SSM_MODEL.csproj" />
-  <Project Path="Sched-sub-management.csproj" />
-</Solution>
+<Solution />

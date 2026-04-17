@@ -10,26 +10,15 @@ namespace SSM_BL
         public void AddSubject(string subjectName, string schedule)
         {
             bool added = addSubject.Add(subjectName, schedule);
-
-            if (added)
-                Console.WriteLine("Subject added successfully.");
-            else
-                Console.WriteLine("Failed to add subject. Subject list may be full.");
+            Console.WriteLine(added ? "Subject added successfully." : "Failed to add subject. Subject list may be full.");
         }
 
-        public void ShowSubjects()
-        {
-            addSubject.ShowSubjects();
-        }
+        public void ShowSubjects() => addSubject.ShowSubjects();
 
         public void RemoveSubject(int subjectIndex)
         {
             bool removed = addSubject.Remove(subjectIndex);
-
-            if (removed)
-                Console.WriteLine("Subject removed successfully.");
-            else
-                Console.WriteLine("Failed to remove subject.");
+            Console.WriteLine(removed ? "Subject removed successfully." : "Failed to remove subject.");
         }
 
         public void SaveDataToJson(string filePath)
@@ -42,6 +31,18 @@ namespace SSM_BL
         {
             addSubject.LoadFromJson(filePath);
             Console.WriteLine("Subjects loaded from JSON file.");
+        }
+
+        public void SaveDataToSql(string connectionString)
+        {
+            addSubject.SaveToSql(connectionString);
+            Console.WriteLine("Subjects saved to SQL database.");
+        }
+
+        public void LoadDataFromSql(string connectionString)
+        {
+            addSubject.LoadFromSql(connectionString);
+            Console.WriteLine("Subjects loaded from SQL database.");
         }
     }
 }
