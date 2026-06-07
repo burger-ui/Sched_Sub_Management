@@ -1,57 +1,36 @@
 ﻿using SSM_DL;
 using SSM_MODEL;
-using System;
+using System.Collections.Generic;
 
 namespace SSM_BL
 {
     public class AddSubBL
     {
-        private DL_SSM addSubject = new DL_SSM(); 
-        private SubSchedDBData dbHandler = new SubSchedDBData(); 
+        private DL_SSM addSubject = new DL_SSM();
+        private SubSchedDBData dbHandler = new SubSchedDBData();
 
-        public void AddSubject(string subjectName, string schedule)
-        {
-            bool added = addSubject.Add(subjectName, schedule);
-            Console.WriteLine(added ? "Subject added successfully." : "Failed to add subject. Subject list may be full.");
-        }
+        public void AddSubject(string subjectName, string schedule) => addSubject.Add(subjectName, schedule);
+        public bool RemoveSubject(int subjectIndex) => addSubject.Remove(subjectIndex);
+        public void SaveDataToJson(string filePath) => addSubject.SaveToJson(filePath);
+        public void LoadDataFromJson(string filePath) => addSubject.LoadFromJson(filePath);
+        public List<MODEL_SSM> GetSubjectsFromMemory() => addSubject.GetSubjects();
 
-        public void ShowSubjects() => addSubject.ShowSubjects();
 
-        public void RemoveSubject(int subjectIndex)
-        {
-            bool removed = addSubject.Remove(subjectIndex);
-            Console.WriteLine(removed ? "Subject removed successfully." : "Failed to remove subject.");
-        }
+        public void AddSubjectToDb(string subjectName, string schedule) => dbHandler.Add(new MODEL_SSM(subjectName, schedule));
+        public bool RemoveSubjectFromDb(string subjectName) => dbHandler.Remove(subjectName);
+        public List<MODEL_SSM> GetSubjectsFromDb() => dbHandler.GetAll();
 
-        public void SaveDataToJson(string filePath)
-        {
-            addSubject.SaveToJson(filePath);
-            Console.WriteLine("Subjects saved to JSON file.");
-        }
-
-        public void LoadDataFromJson(string filePath)
-        {
-            addSubject.LoadFromJson(filePath);
-            Console.WriteLine("Subjects loaded from JSON file.");
-        }
-
-        public void AddSubjectToDb(string subjectName, string schedule)
-        {
-            dbHandler.Add(new MODEL_SSM(subjectName, schedule));
-            Console.WriteLine("Subject added to DB.");
-        }
-
-        public void ShowSubjectsFromDb()
+        public bool UpdateSubjectInDb(string subjectName, string newSchedule)
         {
             var subjects = dbHandler.GetAll();
-            if (subjects.Count == 0) Console.WriteLine("No subjects in DB.");
-            else foreach (var s in subjects) Console.WriteLine(s);
-        }
+            var subject = subjects.Find(s => s.SubjectName.Equals(subjectName,
+                          StringComparison.OrdinalIgnoreCase));
+            if (subject == null) return false;
 
-        public void RemoveSubjectFromDb(string subjectName)
-        {
-            bool removed = dbHandler.Remove(subjectName);
-            Console.WriteLine(removed ? "Subject removed from DB." : "Failed to remove subject from DB.");
+            dbHandler.Remove(subject.SubjectName);
+            dbHandler.Add(new MODEL_SSM(subject.SubjectName, newSchedule));
+            return true;
         }
     }
 }
+

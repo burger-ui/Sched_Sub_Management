@@ -1,57 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Text.Json;
+using System.IO;
 using SSM_MODEL;
 
 namespace SSM_DL
 {
     public class DL_SSM
     {
-        private List<MODEL_SSM> subjects = new List<MODEL_SSM>();
-        private int maxSubjects = 5;
+        private const string FILE_PATH = "subjects.json";
+        private static List<MODEL_SSM> subjects = new List<MODEL_SSM>();
 
-        public bool Add(string subjectName, string schedule)
+        public void Add(string subjectName, string schedule)
         {
-            if (subjects.Count >= maxSubjects)
-            {
-                Console.WriteLine("Subject List is Full");
-                return false;
-            }
-
-            subjects.Add(new MODEL_SSM(subjectName, schedule));
-            return true;
+            subjects.Add(new MODEL_SSM { SubjectName = subjectName, Schedule = schedule });
+            SaveToJson(FILE_PATH);
         }
 
-        public List<MODEL_SSM> GetSubjects() => subjects;
-
-        public void ShowSubjects()
+        public bool Remove(int index)
         {
-            if (subjects.Count == 0)
+            if (index >= 0 && index < subjects.Count)
             {
-                Console.WriteLine("No subjects added yet.");
-                return;
+                subjects.RemoveAt(index);
+                SaveToJson(FILE_PATH);
+                return true;
             }
-
-            for (int i = 0; i < subjects.Count; i++)
-                Console.WriteLine($"{i + 1}. {subjects[i]}");
+            return false;
         }
 
-        public bool Remove(int subjectIndex)
+        public List<MODEL_SSM> GetSubjects()
         {
-            if (subjectIndex < 0 || subjectIndex >= subjects.Count)
-                return false;
-
-            subjects.RemoveAt(subjectIndex);
-            return true;
+            LoadFromJson(FILE_PATH);
+            return subjects;
         }
 
         public void SaveToJson(string filePath)
         {
-            JsonHandler.Save(filePath, subjects);
+            string json = JsonSerializer.Serialize(subjects);
+            File.WriteAllText(filePath, json);
         }
 
         public void LoadFromJson(string filePath)
         {
-            subjects = JsonHandler.Load(filePath);
+            if (!File.Exists(filePath)) return;
+            string json = File.ReadAllText(filePath);
+            subjects = JsonSerializer.Deserialize<List<MODEL_SSM>>(json)
+                       ?? new List<MODEL_SSM>();
         }
     }
 }
